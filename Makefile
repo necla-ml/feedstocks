@@ -1,5 +1,7 @@
 ENV?=build37
-channel?=NECLA-ML
+CHANNEL?=NECLA-ML
+CONDA_CUDATOOLKIT_CONSTRAINT="cudatoolkit >=10.1,<10.2"
+MAGMA_PACKAGE=magma-cuda101
 
 .PHONY: all
 
@@ -8,12 +10,38 @@ channel?=NECLA-ML
 build-dep:
 	conda install -y conda-build anaconda-client
 
+%-cuda:
+	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
+		conda activate $(ENV); \
+			conda config --set anaconda_upload yes; \
+			conda-build purge-all; \
+			export RECIPE=$*; \
+			CONDA_CPUONLY_FEATURE="" \
+			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
+			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
+			BLD_STR_SUFFIX="" \
+			conda-build --user $(CHANNEL) recipes/$*; \
+		conda deactivate
+
+%-cpu:
+	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
+		conda activate $(ENV); \
+			conda config --set anaconda_upload yes; \
+			conda-build purge-all; \
+			export RECIPE=$*; \
+			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
+			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
+			MAGMA_PACKAGE="" \
+			BLD_STR_SUFFIX="_cpu" \
+			conda-build --user $(CHANNEL) recipes/$*; \
+		conda deactivate
+
 %:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			export RECIPE=$@; conda-build --user $(channel) recipes/$@; \
+			export RECIPE=$@; conda-build --user $(CHANNEL) recipes/$@; \
 		conda deactivate
 
 ## Conda Environment
