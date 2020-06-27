@@ -1,0 +1,63 @@
+{% set version = "0.6.1" %}
+
+package:
+  name: {{ RECIPE }}
+  # version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
+  # name: {{ name }}
+  version: {{ version }}
+
+source:
+  # git_rev: {{ GIT_DESCRIBE_TAG }}
+  # git_url: https://github.com/open-mmlab/mmcv.git
+  url: "https://pypi.io/packages/source/{{ RECIPE[0] }}/{{ RECIPE }}/{{ RECIPE }}-{{ version }}.tar.gz"
+  sha256: 8f22e2be557ab267a042720c631e2bf9d6aaf3c266917c45f2dcb407db16ed1a
+
+build:
+  number: 0
+  # number: {{ GIT_DESCRIBE_NUMBER }}
+  # {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}_0
+  # {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
+
+requirements:
+  host:
+    - cython
+    - opencv
+    - pip
+    - pytest-runner
+    - python=3.7
+  run:
+    - addict
+    - numpy
+    - opencv
+    - python=3.7
+    - pytorch
+    - pyyaml
+    - torchvision
+    - yapf
+test:
+  requires:
+    - pytest
+  imports:
+    - mmcv
+    - mmcv.arraymisc
+    - mmcv.cnn
+    - mmcv.cnn.bricks
+    - mmcv.fileio
+    - mmcv.fileio.handlers
+    - mmcv.image
+    - mmcv.parallel
+    - mmcv.runner
+    - mmcv.runner.hooks
+    - mmcv.runner.hooks.logger
+    - mmcv.runner.optimizer
+    - mmcv.utils
+    - mmcv.video
+    - mmcv.video.optflow_warp
+    - mmcv.visualization
+
+about:
+  home: https://github.com/open-mmlab/mmcv
+  license: Apache License
+  license_family: APACHE
+  summary: Composable command line interface toolkit
