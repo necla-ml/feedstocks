@@ -20,7 +20,7 @@ build-dep:
 			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
 			BLD_STR_SUFFIX="" \
-			conda-build --user $(CHANNEL) recipes/$*; \
+			GIT_LFS_SKIP_SMUDGE=1 conda-build --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %-cpu:
@@ -33,7 +33,7 @@ build-dep:
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 			MAGMA_PACKAGE="" \
 			BLD_STR_SUFFIX="_cpu" \
-			conda-build --user $(CHANNEL) recipes/$*; \
+			GIT_LFS_SKIP_SMUDGE=1 conda-build --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %:
@@ -41,7 +41,7 @@ build-dep:
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			export RECIPE=$@; conda-build --user $(CHANNEL) recipes/$@; \
+			export RECIPE=$@; GIT_LFS_SKIP_SMUDGE=1 conda-build --user $(CHANNEL) recipes/$@; \
 		conda deactivate
 
 ## Conda Environment
