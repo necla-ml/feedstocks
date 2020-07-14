@@ -19,10 +19,10 @@ requirements:
 #    - gcc_linux-64  # [linux]
 #    - gxx_linux-64  # [linux]
   host:
-    - ml>=0.6.6
+    - ml>=0.6.7
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
   run:
-    - ml>=0.6.6
+    - ml>=0.6.7
     - nvidia-apex     # mixed precision training for pytorch < 1.6
     - pycocotools>=2
     - torchvision
