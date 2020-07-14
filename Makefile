@@ -8,7 +8,7 @@ MAGMA_PACKAGE=magma-cuda101
 ## Conda Distribution
 
 build-dep:
-	conda install -y conda-build anaconda-client
+	conda install -y conda-build anaconda-client -n $(ENV)
 
 %-cuda:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
