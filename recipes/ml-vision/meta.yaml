@@ -23,6 +23,7 @@ requirements:
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
   run:
     - ml>=0.6.6
+    - nvidia-apex     # mixed precision training for pytorch < 1.6
     - pycocotools>=2
     - torchvision
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
