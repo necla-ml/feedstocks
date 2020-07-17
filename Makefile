@@ -16,7 +16,7 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$*; \
-			CONDA_CPUONLY_FEATURE="" \
+			export CONDA_CPUONLY_FEATURE=""; \
 			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
 			BLD_STR_SUFFIX="" \
@@ -29,7 +29,7 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$*; \
-			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
+			export CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]"; \
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 			MAGMA_PACKAGE="" \
 			BLD_STR_SUFFIX="_cpu" \
