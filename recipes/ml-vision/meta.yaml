@@ -10,7 +10,6 @@ build:
   number: {{ GIT_DESCRIBE_NUMBER }}
   {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
-  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE') }}
 
@@ -23,7 +22,6 @@ requirements:
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
   run:
     - ml>=0.6.7
-    - nvidia-apex     # mixed precision training for pytorch < 1.6
     - pycocotools>=2
     - torchvision
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
