@@ -1,0 +1,35 @@
+# {% set setup = load_setup_py_data(setup_file='../setup.py', from_recipe_dir=True) %}
+
+package:
+  name: {{ RECIPE }}
+  version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
+
+source:
+  git_rev: {{ GIT_DESCRIBE_TAG }}
+  git_rev: v0.0.5
+  git_url: https://github.com/pytorch/tnt.git
+
+build:
+  number: {{ GIT_DESCRIBE_NUMBER }}
+  {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
+  {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+
+requirements:
+  host:
+    - numpy
+    - pip
+    - python=3.7
+  run:
+    - numpy
+    - python=3.7
+    - pytorch
+    - six
+    - visdom
+test:
+  imports:
+    - torchnet.meter.confusionmeter
+  commands:
+    - $PYTHON -c 'from torchnet.meter import ConfusionMeter'
+
+about:
+  home: https://github.com/pytorch/tnt
