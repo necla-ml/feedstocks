@@ -30,6 +30,7 @@ requirements:
     - anaconda-client
     - av>=8.0.1
     - blosc-hdf5-plugin
+    - boto3
     - conda-build
     - cython=0.29
     - git
