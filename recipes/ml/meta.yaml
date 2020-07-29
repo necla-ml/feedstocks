@@ -22,7 +22,7 @@ requirements:
     - numexpr
     - pip
     - python=3.7
-    - pytorch=1.5.1
+    - pytorch=1.6
     - setuptools
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
   run:
@@ -55,14 +55,14 @@ requirements:
     - pytest>=5.2.0
     - python=3.7
     - python-daemon
-    - pytorch=1.5.1
+    - pytorch=1.6
     - pyyaml>=5.1.2
     - requests-toolbelt         # multipart streaming over HTTP
     - setuptools>=41.2
     - six>=1.12
     - scikit-learn>=0.21.3      # required by BERT
     - tensorboard>=2.1
-    - visdom>=0.1.8.9
+#    - visdom>=0.1.8.9
     - transformers>=2.1.1
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
 {{ environ.get('MAGMA_PACKAGE') }}
