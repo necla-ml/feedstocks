@@ -23,7 +23,7 @@ requirements:
     - cmake
     - git
     - libcurl
-    - ml>=0.8.1      # ml.shutils
+    - ml>=0.8.2      # ml.shutils
     - openssl
     - pip
     - python=3.7
@@ -31,7 +31,7 @@ requirements:
   run:
     - cffi
     - cmake
-    - ml>=0.8.1
+    - ml>=0.8.2
     - python=3.7
     - youtube-dl
 test:
