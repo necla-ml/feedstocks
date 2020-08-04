@@ -17,13 +17,13 @@ make {recipe}
 
 ## Supported Recipes
 
-Working from Git repo:
+Working from Git repo with CUDA/CPU variants:
+- [ml](https://gitlab.com/necla-ml/ml)
+- [ml-vision](https://gitlab.com/necla-ml/ml-vision)
+
+Working from Git repo without specific arch:
 - [ml-ws](https://gitlab.com/necla-ml/ml-ws)
-
-Working from PYPI source:
 - [mmcv](https://github.com/open-mmlab/mmcv)
-
-Stuck on Git Repo and no PYPI source:
 - [mmdetection](https://github.com/open-mmlab/mmdetection)
 
 Missing Dependencies:
