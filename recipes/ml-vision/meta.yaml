@@ -12,16 +12,17 @@ build:
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE') }}
+  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
 
 requirements:
   build:
 #    - gcc_linux-64  # [linux]
 #    - gxx_linux-64  # [linux]
   host:
-    - ml>=0.8.2
+    - ml>=0.8.3
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
   run:
-    - ml>=0.8.2
+    - ml>=0.8.3
     - pycocotools>=2
     - torchvision
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
