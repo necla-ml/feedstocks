@@ -3,7 +3,8 @@ package:
   version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
 
 source:
-  git_rev: v0.8.3 # {{ GIT_DESCRIBE_TAG }}
+  git_rev: {{ GIT_DESCRIBE_TAG }}
+  git_rev: v0.8.5
   git_url: https://gitlab.com/necla-ml/ML.git
 
 build:
@@ -12,7 +13,7 @@ build:
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   features:
-{{ environ.get('CONDA_CPUONLY_FEATURE') }}
+{{ environ.get('CONDA_CPUONLY_FEATURE', '') }}
 
 requirements:
   build:
@@ -24,7 +25,7 @@ requirements:
     - python=3.7
     - pytorch=1.6
     - setuptools
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
+{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - accimage>=0.1.1           # [not osx]
     - anaconda-client
@@ -37,7 +38,6 @@ requirements:
     - git-lfs
     - h5py>=2.10
     - ignite
-    - jsonpatch                 # implicitly required by visdom
     - line_profiler>=2.1.2
     - matplotlib>=3.1.1
     - numba                     # optional: experimental speedup with JIT
@@ -62,19 +62,24 @@ requirements:
     - six>=1.12
     - scikit-learn>=0.21.3      # required by BERT
     - tensorboard>=2.1
-#    - visdom>=0.1.8.9
     - transformers>=2.1.1
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
-{{ environ.get('MAGMA_PACKAGE') }}
+{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
+{{ environ.get('MAGMA_PACKAGE', '') }}
 test:
+  requires:
+    - pytest
   imports:
     - ml.av
     - ml.cv
-#  commands:
-#    - $PYTHON -c 'import torch; import ml._C'  
+  source_files:
+    - setup.cfg
+    - tests
+  commands:
+#    - $PYTHON -c 'import torch; import ml._C'
+    - pytest tests -m essential
 
 about:
   home: https://gitlab.com/necla-ml/ML
   license: BSD
   license_family: BSD
-  summary: Composable command line interface toolkit
+  summary: NECLA Machine Learning Framework
