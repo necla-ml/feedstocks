@@ -34,10 +34,12 @@ requirements:
     - ml>=0.8.2
     - python=3.7
     - youtube-dl
+    - stomp.py
 test:
   imports:
     - ml.iot
     - ml.streaming
+    - ml.ws.broker
   commands:
     - $PYTHON -c 'import torch; import ml.streaming._C'
 
