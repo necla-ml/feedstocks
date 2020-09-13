@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.5.17
+  git_rev: v0.5.18
   git_url: https://gitlab.com/necla-ml/ML-WS.git
 
 build:
@@ -24,7 +24,7 @@ requirements:
     - cmake
     - git
     - libcurl
-    - ml>=0.8.5      # ml.shutils
+    - ml>=0.8.6      # ml.shutils
     - openssl
     - pip
     - python=3.7
@@ -32,7 +32,7 @@ requirements:
   run:
     - cffi
     - cmake
-    - ml>=0.8.5
+    - ml>=0.8.6
     - python=3.7
     - youtube-dl
 test:
