@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.6.3
+  git_rev: v0.6.5
   git_url: https://gitlab.com/necla-ml/ML-Vision.git
 
 build:
