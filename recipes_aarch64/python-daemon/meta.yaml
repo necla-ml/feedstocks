@@ -1,0 +1,46 @@
+{% set version = "2.2.4" %}
+
+package:
+  name: python-daemon
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/p/python-daemon/python-daemon-{{ version }}.tar.gz
+  sha256: 57c84f50a04d7825515e4dbf3a31c70cc44414394a71608dee6cfde469e81766
+
+build:
+  number: 0
+  skip: True  # [not aarch64]
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+    - twine
+    - docutils
+  run:
+    - python
+    - lockfile >=0.10
+    - setuptools
+    - docutils >=0.16
+
+test:
+  requires:
+    - pip
+  commands:
+    - pip check
+  imports:
+    - daemon
+
+about:
+  home: https://pagure.io/python-daemon/
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE.ASF-2
+  summary: Library to implement a well-behaved Unix daemon process.
+  dev_url: https://pagure.io/python-daemon/
+
+extra:
+  recipe-maintainers:
+    - deepsworld
