@@ -1,0 +1,62 @@
+{% set version = "0.11.1" %}
+
+package:
+  name: ml
+  version: {{ version }}
+
+source:
+  git_rev: v{{ version }}
+  git_url: https://gitlab.com/necla-ml/ML.git
+
+build:
+  number: 0
+  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
+
+requirements:
+  build:
+#    - gcc_linux-64  # [linux]
+#    - gxx_linux-64  # [linux]
+  host:
+    - numexpr
+    - python=3.6
+    - torch=1.6
+    - setuptools
+
+  run:
+    - av >=8.0.2
+    - boto3
+    - cython >=0.29
+    - flake8
+    - git
+    - h5py >=2.10
+    - matplotlib >=3.3.1         # figure close leak in 3.3.0
+    - numba                     # optional: experimental speedup with JIT
+    - numexpr
+    - numpy >=1.19.4                # https://github.com/cocodataset/cocoapi/issues/356
+    - pandas>=0.25.1
+    #- lbzip2
+    - opencv
+    #- pigz
+    - pillow
+    - psutil                    # number of physical cores
+    - pygments >=2.4.2
+    - pytables >=3.5.2
+    - python =3.6
+    - python-daemon
+    - torch =1.6
+    - pyyaml >=5.1.2
+    - requests-toolbelt         # multipart streaming over HTTP
+    - setuptools >=41.2
+    - six >=1.14.0
+    - scikit-learn >=0.21.3      # required by BERT
+    - transformers >=2.1.1
+test:
+  imports:
+    - ml.av
+    - ml.cv
+
+about:
+  home: https://gitlab.com/necla-ml/ML
+  license: BSD
+  license_family: BSD
+  summary: NECLA Machine Learning Framework
