@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.7.4
+  git_rev: v0.7.7
   git_url: https://gitlab.com/necla-ml/ML-Vision.git
 
 build:
@@ -20,10 +20,10 @@ requirements:
 #    - gcc_linux-64  # [linux]
 #    - gxx_linux-64  # [linux]
   host:
-    - ml=0.10.2
+    - ml=0.11.3
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
-    - ml=0.10.2
+    - ml=0.11.3
     - pycocotools>=2
     - torchvision
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
@@ -41,7 +41,7 @@ test:
     - assets
   commands:
     - $PYTHON -c 'import torch; import ml._C'
-    - pytest -m essential
+    #- pytest -m essential
 
 about:
   home: https://gitlab.com/necla-ml/ML-Vision
