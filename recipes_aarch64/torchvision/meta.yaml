@@ -1,0 +1,43 @@
+{% set version = "0.7.0" %}
+
+package:
+  name: torchvision
+  version: {{ version }}
+
+build:
+  number: 0
+  skip: True  # [not aarch64]
+
+requirements:
+  build:
+    - python=3.6
+    - setuptools
+    - torch >=1.6
+    - pillow >=8.0.1
+    - future
+
+  run:
+    - python=3.6
+    - pillow >=8.0.1
+    - numpy >=1.19.4
+    - torch >=1.6
+    - six >=1.14.0
+    - future
+
+test:
+  imports:
+    - torchvision
+    - torchvision.datasets
+    - torchvision.models
+    - torchvision.transforms
+    - torchvision.utils
+
+about:
+  home: http://pytorch.org/
+  summary: Image and video datasets and models for torch deep learning
+  dev_url: https://github.com/pytorch/vision
+  doc_url: http://pytorch.org/docs/master/torchvision
+
+extra:
+  recipe-maintainers:
+    - deepsworld

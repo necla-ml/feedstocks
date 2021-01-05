@@ -1,0 +1,31 @@
+{% set version = "1.6.0" %}
+
+package:
+  name: torch
+  version: {{ version }}
+
+build:
+  number: 1
+  skip: True  # [not aarch64]
+
+requirements:
+  build:
+    - python=3.6
+    - setuptools
+    
+  run:
+    - python=3.6
+    - numpy >=1.19.4
+
+test:
+  imports:
+    - torch
+
+about:
+  home: http://pytorch.org/
+  dev_url: https://github.com/pytorch/
+  doc_url: http://pytorch.org/docs/master/torch
+
+extra:
+  recipe-maintainers:
+    - deepsworld
