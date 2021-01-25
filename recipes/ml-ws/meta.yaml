@@ -24,11 +24,7 @@ requirements:
     - cmake
     - git
     - libcurl
-<<<<<<< HEAD
-    - ml>=0.11.2      # ml.shutils
-=======
     - ml>=0.11.0      # ml.shutils
->>>>>>> 8931970fac5d53d2f1136abbda7e9cae8abbe526
     - openssl
     - pip
     - python=3.7
@@ -36,11 +32,7 @@ requirements:
   run:
     - cffi
     - cmake
-<<<<<<< HEAD
-    - ml>=0.11.2
-=======
     - ml>=0.11.0
->>>>>>> 8931970fac5d53d2f1136abbda7e9cae8abbe526
     - python=3.7
     - youtube-dl
     - stomp.py
