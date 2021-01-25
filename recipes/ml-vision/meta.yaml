@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.7.9
+  git_rev: v0.8.1
   git_url: https://gitlab.com/necla-ml/ML-Vision.git
 
 build:
@@ -23,11 +23,12 @@ requirements:
 #    - cxx-compiler
 # {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml=0.11.3
+    - ml=0.11.5
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
-    - ml=0.11.3
+    - ml=0.11.5
     - pycocotools>=2
+    - seaborn         # yolov5 v4.0
     - torchvision
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
 {{ environ.get('MAGMA_PACKAGE', '') }}
