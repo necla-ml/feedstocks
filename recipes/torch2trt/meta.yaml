@@ -1,0 +1,42 @@
+package:
+  name: {{ RECIPE | lower }}
+  version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
+
+source:
+  git_rev: {{ GIT_DESCRIBE_TAG }}
+  git_rev: 81024cc
+  git_url: https://github.com/NVIDIA-AI-IOT/torch2trt
+
+build:
+  number: {{ GIT_DESCRIBE_NUMBER }}
+  {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
+  {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+  script_env:
+    - TORCH_CUDA_ARCH_LIST
+  # script: python setup.py install --plugins -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:'
+  script: python setup.py install --plugins
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    #- nvcc_linux-64 # [linux]
+  host:
+    - python=3.7
+    - pytorch=1.7.0
+    - tensorrt=7.2.2.3
+  run:
+    - python=3.7
+    - pytorch=1.7.0
+    - torchvision
+    - tensorrt=7.2.2.3
+test:
+  imports:
+    - torch2trt
+    - torch2trt.torch2trt
+  commands:
+
+about:
+  home: https://github.com/NVIDIA-AI-IOT/torch2trt
+  license: Proprietary
+  license_family: Proprietary
+  summary: PyTorch module adapter for TensorRT

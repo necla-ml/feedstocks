@@ -1,7 +1,16 @@
-ENV=build37
+ENV?=build37
 CHANNEL?=NECLA-ML
-CONDA_CUDATOOLKIT_CONSTRAINT="cudatoolkit=10.2"
-MAGMA_PACKAGE=magma-cuda102
+# 10.2, 7.6.5
+CUDA_VER?=11.0
+CUDNN_VER?=8.0.5
+# 102, 7
+CUDA_PT_VER?=110
+CUDNN_PT_VER?=8
+CONDA_NVCC_CONSTRAINT=nvcc_linux-64=${CUDA_VER}
+CONDA_CUDATOOLKIT_CONSTRAINT=cudatoolkit=${CUDA_VER}
+CUDNN_PACKAGE=cudnn
+MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
+TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
 
@@ -15,11 +24,13 @@ build-dep:
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			export RECIPE=$*; \
-			export CONDA_CPUONLY_FEATURE=""; \
+			RECIPE=$* \
+			CONDA_CPUONLY_FEATURE="" \
+			TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
+			CONDA_NVCC_CONSTRAINT='    - $(CONDA_NVCC_CONSTRAINT) # [not osx]' \
 			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
-			BLD_STR_SUFFIX="" \
+			BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
 			GIT_LFS_SKIP_SMUDGE=1 \
 			conda-build --user $(CHANNEL) recipes/$*; \
 		conda deactivate
@@ -29,10 +40,9 @@ build-dep:
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			export RECIPE=$*; \
-			export CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]"; \
+			RECIPE=$* \
+			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
-			MAGMA_PACKAGE="" \
 			BLD_STR_SUFFIX="_cpu" \
 			GIT_LFS_SKIP_SMUDGE=1 \
 			conda-build --user $(CHANNEL) recipes/$*; \

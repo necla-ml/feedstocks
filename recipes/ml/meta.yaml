@@ -23,7 +23,7 @@ requirements:
     - numexpr
     - pip
     - python=3.7
-    - pytorch=1.6
+    - pytorch=1.7.0  # FIXME to lock torchvision=0.8.1
     - setuptools
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
@@ -34,6 +34,7 @@ requirements:
     - boto3
     - conda-build
     - cython=0.29
+    - ffmpeg>=4.3.1             # in case of 4.3 from pytorch
     - flake8
     - git
     - git-lfs
@@ -41,7 +42,7 @@ requirements:
     - ignite
     - line_profiler>=2.1.2
     - matplotlib>=3.3.1         # figure close leak in 3.3.0
-    - numba                     # optional: experimental speedup with JIT
+    - numba>=0.52               # optional: experimental speedup with JIT
     - numexpr
     - numpy=1.17                # https://github.com/cocodataset/cocoapi/issues/356
     - pandas>=0.25.1
@@ -57,7 +58,7 @@ requirements:
     - pytest-benchmark
     - python=3.7
     - python-daemon
-    - pytorch=1.6
+    - pytorch=1.7.0
     - pyyaml>=5.1.2
     - requests-toolbelt         # multipart streaming over HTTP
     - setuptools>=41.2
@@ -77,7 +78,6 @@ test:
     - setup.cfg
     - tests
   commands:
-#    - $PYTHON -c 'import torch; import ml._C'
     - pytest tests -m essential
 
 about:
