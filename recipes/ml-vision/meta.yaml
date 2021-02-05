@@ -23,10 +23,10 @@ requirements:
 #    - cxx-compiler
 # {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml=0.11.5
+    - ml=0.11.6
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
-    - ml=0.11.5
+    - ml=0.11.6
     - pycocotools>=2
     - seaborn         # yolov5 v4.0
     - torchvision
