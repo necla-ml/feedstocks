@@ -1,0 +1,45 @@
+package:
+  name: {{ RECIPE }}
+  version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
+
+source:
+  git_rev: {{ GIT_DESCRIBE_TAG }}
+  # `bad_encoder_fix` merged to deals with non-VCL NALUs ending with a zero byte
+  # https://github.com/awslabs/amazon-kinesis-video-streams-producer-sdk-cpp/issues/491
+  # since cpp-sdk v3.0.0+
+  git_rev: 2ab5602  
+  git_url: https://github.com/awslabs/amazon-kinesis-video-streams-producer-c.git
+
+build:
+  number: {{ GIT_DESCRIBE_NUMBER }}
+  #{% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
+  #{% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+  # string: {{ environ.get('GIT_BUILD_STR') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ GIT_DESCRIBE_NUMBER }}
+  string: {{ GIT_BUILD_STR }}{{ BLD_STR_SUFFIX }}
+  features:
+  script_env:
+
+requirements:
+  build:
+    - pkg-config
+    - automake
+    - cmake 
+    - gcc_linux-64
+  host:
+    - libcurl
+    - openssl
+#    - python=3.7d
+  run:
+    - libcurl
+    - openssl
+#    - python=3.7
+test:
+#  requires:
+#    - pytest
+  imports:
+
+about:
+  home: https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/producer-sdk.html
+  license: Apache License 2.0
+  license_family: APACHE
+  summary: Amazon Kinesis Video Streams CPP Producer, GStreamer Plugin and JNI
