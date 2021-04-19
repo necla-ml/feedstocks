@@ -1,0 +1,34 @@
+package:
+  name: {{ RECIPE }}
+  version: 1.0.0
+
+build:
+  number: 0
+  string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
+  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' git+https://github.com/necla-ml/Deformable-DETR#egg=MultiScaleDeformableAttention\&subdirectory=models/ops
+  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' git+https://github.com/fundamentalvision/Deformable-DETR#egg=MultiScaleDeformableAttention\&subdirectory=models/ops
+  features:
+{{ environ.get('CONDA_CPUONLY_FEATURE') }}
+  script_env:
+    - CONDA_CPUONLY_FEATURE
+
+requirements:
+  host:
+    - pip
+    - python=3.7
+    - pytorch=1.7.0
+{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
+  run:
+    - python=3.7
+    - pytorch=1.7.0
+{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
+{{ environ.get('MAGMA_PACKAGE', '') }}
+test:
+  commands:
+    - $PYTHON -c 'import torch, MultiScaleDeformableAttention'
+
+about:
+  home: https://github.com/necla-ml/Deformable-DETR
+  license: Apache License
+  license_family: APACHE
+  summary: Composable command line interface toolkit
