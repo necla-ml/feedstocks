@@ -27,7 +27,7 @@ requirements:
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - ml=1.2.1
-    - pycocotools>=2
+    - pycocotools>=2.0.2
     - seaborn         # yolov5 v4.0
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
 {{ environ.get('MAGMA_PACKAGE', '') }}
