@@ -3,13 +3,16 @@ CHANNEL?=NECLA-ML
 # 10.2, 7.6.5
 CUDA_VER?=11.0
 CUDNN_VER?=8.0.5
-# 102, 7
+# 110, 8
 CUDA_PT_VER?=110
 CUDNN_PT_VER?=8
 CONDA_NVCC_CONSTRAINT=nvcc_linux-64=${CUDA_VER}
 CONDA_CUDATOOLKIT_CONSTRAINT=cudatoolkit=${CUDA_VER}
 CUDNN_PACKAGE=cudnn
 MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
+
+# PYTORCH
+PTH_VER?=1.7.0
 TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
@@ -26,7 +29,9 @@ build-dep:
 			conda-build purge-all; \
 			RECIPE=$* \
 			CONDA_CPUONLY_FEATURE="" \
+			PTH_VER=$(PTH_VER) \
 			TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
+			CUDA_PT_VER=$(CUDA_PT_VER) \
 			CONDA_NVCC_CONSTRAINT='    - $(CONDA_NVCC_CONSTRAINT) # [not osx]' \
 			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
@@ -41,6 +46,7 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			RECIPE=$* \
+			PTH_VER=$(PTH_VER) \
 			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 			BLD_STR_SUFFIX="_cpu" \
