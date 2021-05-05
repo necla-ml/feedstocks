@@ -1,0 +1,33 @@
+package:
+  name: {{ RECIPE }}
+  version: 0.13.0
+
+build:
+  number: 0
+  string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
+  features:
+{{ environ.get('CONDA_CPUONLY_FEATURE') }}
+  script_env:
+    - CONDA_CPUONLY_FEATURE
+    - CUDA_PT_VER
+    - PTH_VER
+
+requirements:
+  host:
+    - numpy
+    - python=3.7
+  run:
+    - mmcv=1.3.3
+    - python=3.7
+{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
+test:
+#  requires:
+#    - pytest
+  imports:
+    - mmpose
+
+about:
+  home: https://github.com/open-mmlab/mmpose
+  license: Apache License 2.0
+  license_family: APACHE
+  summary: OpenMMLab Computer Vision Foundation
