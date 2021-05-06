@@ -9,6 +9,7 @@ CUDNN_PT_VER?=8
 CONDA_NVCC_CONSTRAINT=nvcc_linux-64=${CUDA_VER}
 CONDA_CUDATOOLKIT_CONSTRAINT=cudatoolkit=${CUDA_VER}
 CUDNN_PACKAGE=cudnn
+NCCL_PACKAGE=nccl
 MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
 
 # PYTORCH
@@ -34,6 +35,7 @@ build-dep:
 			CUDA_PT_VER=$(CUDA_PT_VER) \
 			CONDA_NVCC_CONSTRAINT='    - $(CONDA_NVCC_CONSTRAINT) # [not osx]' \
 			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
+			NCCL_PACKAGE="    - $(NCCL_PACKAGE) # [not osx and not win]" \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
 			BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
 			GIT_LFS_SKIP_SMUDGE=1 \

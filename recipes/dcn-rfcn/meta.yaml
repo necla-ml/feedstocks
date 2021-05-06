@@ -29,6 +29,7 @@ requirements:
     - pyyaml
     - requests
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
+{{ environ.get('NCCL_PACKAGE', '') }}
 test:
   script_env:
     - CONDA_CPUONLY_FEATURE
