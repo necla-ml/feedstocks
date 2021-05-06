@@ -3,7 +3,7 @@ package:
   version: 0.13.0
 
 build:
-  number: 0
+  number: 1
   string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE') }}
