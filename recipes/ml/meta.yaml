@@ -31,6 +31,7 @@ requirements:
     - anaconda-client
     - av>=8.0.1
     - blosc-hdf5-plugin
+    - boa
     - boto3
     - conda-build
     - cython=0.29
@@ -42,6 +43,7 @@ requirements:
     - ignite
     - line_profiler>=2.1.2
     - matplotlib>=3.3.1         # figure close leak in 3.3.0
+    - mamba                     # drop-in conda replacement in C/C++
     - numba>=0.52               # optional: experimental speedup with JIT
     - numexpr
     - numpy

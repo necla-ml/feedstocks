@@ -21,7 +21,7 @@ TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 ## Conda Distribution
 
 build-dep:
-	conda install -y conda-build anaconda-client -n $(ENV)
+	mamba install -y conda-build anaconda-client -n $(ENV)
 
 %-cuda:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
@@ -39,7 +39,7 @@ build-dep:
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
 			BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
 			GIT_LFS_SKIP_SMUDGE=1 \
-			conda-build --user $(CHANNEL) recipes/$*; \
+			conda mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %-cpu:
@@ -53,7 +53,7 @@ build-dep:
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 			BLD_STR_SUFFIX="_cpu" \
 			GIT_LFS_SKIP_SMUDGE=1 \
-			conda-build --user $(CHANNEL) recipes/$*; \
+			conda-mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %:
@@ -64,7 +64,7 @@ build-dep:
 			export RECIPE=$@; \
 			BLD_STR_SUFFIX="" \
 			GIT_LFS_SKIP_SMUDGE=1 \
-			conda-build --user $(CHANNEL) recipes/$@; \
+			conda-mambabuild --user $(CHANNEL) recipes/$@; \
 		conda deactivate
 
 ## Conda Environment
