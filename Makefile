@@ -1,10 +1,13 @@
-ENV?=build37
+ENV=build39
 CHANNEL?=NECLA-ML
 # 10.2, 7.6.5
-CUDA_VER?=11.0
+# CUDA_VER?=11.0
+CUDA_VER?=11.1
 CUDNN_VER?=8.0.5
 # 110, 8
-CUDA_PT_VER?=110
+# CUDA_PT_VER?=110
+# CUDNN_PT_VER?=8
+CUDA_PT_VER?=111
 CUDNN_PT_VER?=8
 CONDA_NVCC_CONSTRAINT=nvcc_linux-64=${CUDA_VER}
 CONDA_CUDATOOLKIT_CONSTRAINT=cudatoolkit=${CUDA_VER}
@@ -12,8 +15,13 @@ CUDNN_PACKAGE=cudnn
 NCCL_PACKAGE=nccl
 MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
 
+# PYTHON
+# PY_VER?=3.7
+PY_VER?=3.9
+
 # PYTORCH
-PTH_VER?=1.7.0
+# PTH_VER?=1.7.0
+PTH_VER?=1.9
 TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
@@ -23,22 +31,24 @@ TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 build-dep:
 	mamba install -y conda-build anaconda-client -n $(ENV)
 
+# XXX must build in the base env
 %-cuda:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			RECIPE=$* \
+			export RECIPE=$* \
 			CONDA_CPUONLY_FEATURE="" \
+			PY_VER=$(PY_VER) \
 			PTH_VER=$(PTH_VER) \
 			TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
 			CUDA_PT_VER=$(CUDA_PT_VER) \
-			CONDA_NVCC_CONSTRAINT='    - $(CONDA_NVCC_CONSTRAINT) # [not osx]' \
-			CONDA_CUDATOOLKIT_CONSTRAINT='    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]' \
+			CONDA_NVCC_CONSTRAINT="    - $(CONDA_NVCC_CONSTRAINT) # [not osx]" \
+			CONDA_CUDATOOLKIT_CONSTRAINT="    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]" \
 			NCCL_PACKAGE="    - $(NCCL_PACKAGE) # [not osx and not win]" \
 			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
 			BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
-			GIT_LFS_SKIP_SMUDGE=1 \
+			GIT_LFS_SKIP_SMUDGE=1; \
 			conda mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
@@ -47,12 +57,12 @@ build-dep:
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			RECIPE=$* \
+			export RECIPE=$* \
 			PTH_VER=$(PTH_VER) \
 			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
 			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 			BLD_STR_SUFFIX="_cpu" \
-			GIT_LFS_SKIP_SMUDGE=1 \
+			GIT_LFS_SKIP_SMUDGE=1; \
 			conda-mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
@@ -61,9 +71,9 @@ build-dep:
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
-			export RECIPE=$@; \
+			export RECIPE=$@ \
 			BLD_STR_SUFFIX="" \
-			GIT_LFS_SKIP_SMUDGE=1 \
+			GIT_LFS_SKIP_SMUDGE=1; \
 			conda-mambabuild --user $(CHANNEL) recipes/$@; \
 		conda deactivate
 
@@ -75,7 +85,7 @@ conda-install:
 	rm -fr $(HOME)/Downloads/Miniconda3-latest-Linux-x86_64.sh
 
 conda-env:
-	conda create -n $(ENV) python=3.7
+	mamba create -y -n $(ENV) python=$(PY_VER) boa
 
 conda-setup:
 	echo '' >> $(HOME)/.bashrc
@@ -84,3 +94,6 @@ conda-setup:
 	echo '' >> $(HOME)/.bashrc
 	echo export EDITOR=vim >> $(HOME)/.bashrc
 	echo export PYTHONDONTWRITEBYTECODE=1 >> $(HOME)/.bashrc
+
+conda-pkgs:
+	conda install mamba -n base -c conda-forge
