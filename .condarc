@@ -2,6 +2,7 @@ channels:
   - NECLA-ML  # ML, ML-WS, ML-Vision, DCN-RFCN
   - pytorch
   - conda-forge
+  - nvidia
   - defaults
 ssl_verify: False
 anaconda_upload: False
