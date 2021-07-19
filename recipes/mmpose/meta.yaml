@@ -1,5 +1,5 @@
 package:
-  name: {{ RECIPE }}
+  name: {{ environ.get('RECIPE', 'mmpose') | lower }}
   version: 0.13.0
 
 build:
