@@ -3,7 +3,7 @@ CHANNEL?=NECLA-ML
 # 10.2, 7.6.5
 # CUDA_VER?=11.0
 CUDA_VER?=11.1
-CUDNN_VER?=8.0.5
+CUDNN_VER?=8.2.1
 # 110, 8
 # CUDA_PT_VER?=110
 # CUDNN_PT_VER?=8
@@ -34,40 +34,43 @@ build-dep:
 # XXX must build in the base env
 %-cuda:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
+		conda deactivate; \
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$* \
-			CONDA_CPUONLY_FEATURE="" \
-			PY_VER=$(PY_VER) \
-			PTH_VER=$(PTH_VER) \
-			TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
-			CUDA_PT_VER=$(CUDA_PT_VER) \
-			CONDA_NVCC_CONSTRAINT="    - $(CONDA_NVCC_CONSTRAINT) # [not osx]" \
-			CONDA_CUDATOOLKIT_CONSTRAINT="    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]" \
-			NCCL_PACKAGE="    - $(NCCL_PACKAGE) # [not osx and not win]" \
-			MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
-			BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
-			GIT_LFS_SKIP_SMUDGE=1; \
+				CONDA_CPUONLY_FEATURE="" \
+				PY_VER=$(PY_VER) \
+				PTH_VER=$(PTH_VER) \
+				TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
+				CUDA_PT_VER=$(CUDA_PT_VER) \
+				CONDA_NVCC_CONSTRAINT="    - $(CONDA_NVCC_CONSTRAINT) # [not osx]" \
+				CONDA_CUDATOOLKIT_CONSTRAINT="    - $(CONDA_CUDATOOLKIT_CONSTRAINT) # [not osx]" \
+				NCCL_PACKAGE="    - $(NCCL_PACKAGE) # [not osx and not win]" \
+				MAGMA_PACKAGE="    - $(MAGMA_PACKAGE) # [not osx and not win]" \
+				BLD_STR_SUFFIX="_cuda$(CUDA_PT_VER)_cudnn$(CUDNN_PT_VER)" \
+				GIT_LFS_SKIP_SMUDGE=1; \
 			conda mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %-cpu:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
+		conda deactivate; \
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$* \
-			PTH_VER=$(PTH_VER) \
-			CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
-			CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
-			BLD_STR_SUFFIX="_cpu" \
-			GIT_LFS_SKIP_SMUDGE=1; \
+				PTH_VER=$(PTH_VER) \
+				CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
+				CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
+				BLD_STR_SUFFIX="_cpu" \
+				GIT_LFS_SKIP_SMUDGE=1; \
 			conda-mambabuild --user $(CHANNEL) recipes/$*; \
 		conda deactivate
 
 %:
 	eval "`$$HOME/miniconda3/bin/conda shell.bash hook`"; \
+		conda deactivate; \
 		conda activate $(ENV); \
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \

@@ -5,6 +5,7 @@ package:
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
   git_rev: 81024cc
+  git_rev: v0.3.0
   git_url: https://github.com/NVIDIA-AI-IOT/torch2trt
 
 build:
@@ -13,22 +14,26 @@ build:
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
   script_env:
     - TORCH_CUDA_ARCH_LIST
-  # script: python setup.py install --plugins -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:'
-  script: python setup.py install --plugins
+  # FIXME: --plugins --contrib not working with v0.3.0
+  # script: python setup.py install --plugins --contrib
+  script: pip install -vv --install-option="--plugins" --install-option="--contrib" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
+  script: pip install -vv --install-option="--plugins" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
+  script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
 
 requirements:
   build:
     - {{ compiler('cxx') }}
     #- nvcc_linux-64 # [linux]
   host:
-    - python=3.7
-    - pytorch=1.7.0
-    - tensorrt=7.2.2.3
+    - python=3.9
+    - pytorch=1.9
+    - tensorrt=8.0.1.6
   run:
-    - python=3.7
-    - pytorch=1.7.0
-    - torchvision
-    - tensorrt=7.2.2.3
+    - numpy
+    - python=3.9
+    - pytorch=1.9
+    - torchvision=0.10
+    - tensorrt=8.0.1.6
 test:
   imports:
     - torch2trt

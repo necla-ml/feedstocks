@@ -42,7 +42,6 @@ requirements:
     - mamba                     # drop-in conda replacement in C/C++
     - numba>=0.52               # optional: experimental speedup with JIT
     - numexpr
-#    - numpy
     - pandas>=0.25.1
     - lbzip2
     - pigz
@@ -61,7 +60,6 @@ requirements:
     - six>=1.12
     - scikit-learn>=0.21.3      # required by BERT
     - tensorboard>=2.1
-#    - torchvision=0.10.0
     - transformers>=2.1.1
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
 {{ environ.get('MAGMA_PACKAGE', '') }}
@@ -70,7 +68,6 @@ test:
     - pytest
   imports:
     - ml.av
-#    - ml.cv
   source_files:
     - setup.cfg
     - tests
