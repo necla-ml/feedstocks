@@ -1,0 +1,33 @@
+{% set version = "4.5.3.56" %}
+
+package:
+  name: opencv-python
+  version: {{ version }}
+
+build:
+  number: 0
+
+requirements:
+  host:
+    - python={{ PY_VER }}
+    - pip
+
+  run:
+    - python={{ PY_VER }}
+    - numpy
+    
+test:
+  requires:
+    - pip
+  commands:
+    - pip check
+  imports:
+    - cv2
+
+about:
+  home: https://github.com/opencv/opencv-python
+  summary: OpenCV on Wheels.
+
+extra:
+  recipe-maintainers:
+    - deepsworld
