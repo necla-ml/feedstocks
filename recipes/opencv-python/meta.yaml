@@ -1,4 +1,6 @@
 {% set version = "4.5.3.56" %}
+{% set cp = "-cp" + PY_VER | replace(".", "") %}
+{% set whl = "https://files.pythonhosted.org/packages/6d/7c/acb51d4af0239979a5faf8542a58f8d5774cc30f6a2384527bffbb29278e/opencv_python-" + version + cp + cp + "-manylinux2014_x86_64.whl" %}
 
 package:
   name: opencv-python
@@ -6,12 +8,13 @@ package:
 
 build:
   number: 0
+  script:
+    - pip install {{ whl }} -vvv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:'
 
 requirements:
   host:
     - python={{ PY_VER }}
     - pip
-
   run:
     - python={{ PY_VER }}
     - numpy
@@ -26,8 +29,9 @@ test:
 
 about:
   home: https://github.com/opencv/opencv-python
-  summary: OpenCV on Wheels.
+  summary: Statically linked OpenCV from wheels.
 
 extra:
   recipe-maintainers:
     - deepsworld
+    - farleylai
