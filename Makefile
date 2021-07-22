@@ -21,7 +21,7 @@ PY_VER?=3.9
 
 # PYTORCH
 # PTH_VER?=1.7.0
-PTH_VER?=1.9
+PTH_VER?=1.8.1
 TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
@@ -75,6 +75,7 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$@ \
+				PY_VER=$(PY_VER)\
 			BLD_STR_SUFFIX="" \
 			GIT_LFS_SKIP_SMUDGE=1; \
 			conda-mambabuild --user $(CHANNEL) recipes/$@; \

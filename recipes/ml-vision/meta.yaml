@@ -23,13 +23,13 @@ requirements:
 #    - cxx-compiler
 # {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml=1.4.0
+    - ml=1.4.1
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - accimage>=0.1.1           # [not osx]
     - av>=8.0.1
 #    - ffmpeg>=4.3.1             # in case of 4.3 from pytorch
-    - ml=1.4
+    - ml=1.4.1
 #    - opencv
 #    - pillow
     - pycocotools>=2.0.2
@@ -40,9 +40,9 @@ test:
   requires:
     - pytest
   imports:
-    - ml.av
+    #- ml.av
 #    - ml.cv
-    - ml.vision.ops
+    #- ml.vision.ops
   source_files:
     - setup.cfg
     - tests

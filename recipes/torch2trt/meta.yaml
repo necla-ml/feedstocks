@@ -26,13 +26,13 @@ requirements:
     #- nvcc_linux-64 # [linux]
   host:
     - python=3.9
-    - pytorch=1.9
+    - pytorch=1.8.1
     - tensorrt=8.0.1.6
   run:
     - numpy
     - python=3.9
-    - pytorch=1.9
-    - torchvision=0.10
+    - pytorch=1.8.1
+    - torchvision=0.9.1
     - tensorrt=8.0.1.6
 test:
   imports:
