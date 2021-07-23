@@ -25,14 +25,14 @@ requirements:
     - {{ compiler('cxx') }}
     #- nvcc_linux-64 # [linux]
   host:
-    - python=3.9
-    - pytorch=1.9
+    - python={{ PY_VER }}
+    - pytorch={{ PTH_VER }}
     - tensorrt=8.0.1.6
   run:
     - numpy
-    - python=3.9
-    - pytorch=1.9
-    - torchvision=0.10
+    - python={{ PY_VER }}
+    - pytorch={{ PTH_VER }}
+    - torchvision={{ PTV_VER }}
     - tensorrt=8.0.1.6
 test:
   imports:

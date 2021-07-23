@@ -27,13 +27,13 @@ requirements:
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - accimage>=0.1.1           # [not osx]
-    - av>=8.0.1
-#    - ffmpeg>=4.3.1             # in case of 4.3 from pytorch
+    - av>=8.0.2
     - ml=1.4
-#    - opencv
-#    - pillow
+#    - opencv                   # requires `jpeg>=9d` from conda-forge
+    - opencv-python             # FIXME: non-official to work around `jpeg<=9b` from torchvision
+    - torchvision={{ PTV_VER }} # in case of unexpected downgrade
     - pycocotools>=2.0.2
-    - seaborn         # yolov5 v4.0
+    - seaborn                   # required by yolov5-v4.0
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
 {{ environ.get('MAGMA_PACKAGE', '') }}
 test:
@@ -41,7 +41,7 @@ test:
     - pytest
   imports:
     - ml.av
-#    - ml.cv
+    - ml.cv                     # TODO: to remove once dependency on opencv is out
     - ml.vision.ops
   source_files:
     - setup.cfg
@@ -49,10 +49,10 @@ test:
     - assets
   commands:
     - $PYTHON -c 'import torch; import ml._C'
-    #- pytest -m essential
+    - pytest -m essential
 
 about:
   home: https://gitlab.com/necla-ml/ML-Vision
   license: BSD
   license_family: BSD
-  summary: Composable command line interface toolkit
+  summary: User facing ML vision library

@@ -21,7 +21,10 @@ PY_VER?=3.9
 
 # PYTORCH
 # PTH_VER?=1.7.0
-PTH_VER?=1.9
+PTH_VER?=1.8.1
+PTV_VER?=0.9.1
+# PTH_VER?=1.9.0	# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
+# PTV_VER?=0.10.0	
 TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
@@ -42,6 +45,7 @@ build-dep:
 				CONDA_CPUONLY_FEATURE="" \
 				PY_VER=$(PY_VER) \
 				PTH_VER=$(PTH_VER) \
+				PTV_VER=$(PTV_VER) \
 				TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
 				CUDA_PT_VER=$(CUDA_PT_VER) \
 				CONDA_NVCC_CONSTRAINT="    - $(CONDA_NVCC_CONSTRAINT) # [not osx]" \
@@ -60,7 +64,9 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$* \
+				PY_VER=$(PY_VER) \
 				PTH_VER=$(PTH_VER) \
+				PTV_VER=$(PTV_VER) \
 				CONDA_CPUONLY_FEATURE="    - cpuonly # [not osx]" \
 				CONDA_CUDATOOLKIT_CONSTRAINT="    - cpuonly # [not osx]" \
 				BLD_STR_SUFFIX="_cpu" \
@@ -75,8 +81,9 @@ build-dep:
 			conda config --set anaconda_upload yes; \
 			conda-build purge-all; \
 			export RECIPE=$@ \
-			BLD_STR_SUFFIX="" \
-			GIT_LFS_SKIP_SMUDGE=1; \
+				PY_VER=$(PY_VER) \
+				BLD_STR_SUFFIX="" \
+				GIT_LFS_SKIP_SMUDGE=1; \
 			conda-mambabuild --user $(CHANNEL) recipes/$@; \
 		conda deactivate
 
