@@ -21,10 +21,10 @@ PY_VER?=3.9
 
 # PYTORCH
 # PTH_VER?=1.7.0
-PTH_VER?=1.8.1
-PTV_VER?=0.9.1
-# PTH_VER?=1.9.0	# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
-# PTV_VER?=0.10.0	
+# PTH_VER?=1.8.1
+# PTV_VER?=0.9.1
+PTH_VER?=1.9.0		# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
+PTV_VER?=0.10.0	
 TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 
 .PHONY: all
