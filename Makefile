@@ -32,7 +32,7 @@ TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
 ## Conda Distribution
 
 build-dep:
-	mamba install -y conda-build anaconda-client -n $(ENV)
+	mamba install -y boa anaconda-client -n $(ENV)
 
 # XXX must build in the base env
 %-cuda:
@@ -95,7 +95,7 @@ conda-install:
 	rm -fr $(HOME)/Downloads/Miniconda3-latest-Linux-x86_64.sh
 
 conda-env:
-	mamba create -y -n $(ENV) python=$(PY_VER) boa
+	mamba create -y -n $(ENV) python=$(PY_VER)
 
 conda-setup:
 	echo '' >> $(HOME)/.bashrc
