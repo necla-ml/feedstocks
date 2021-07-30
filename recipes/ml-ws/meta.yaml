@@ -18,14 +18,14 @@ requirements:
   host:
     - cffi
     - kvs-producer-sdk
-    - ml>=1.4.1         # ml.shutils
+    - ml>=1.4.3         # ml.shutils
     - pip
     - python={{ PY_VER }}
     - setuptools
   run:
     - cffi
     - kvs-producer-sdk
-    - ml>=1.4.1
+    - ml>=1.4.3
     - python={{ PY_VER }}
     - youtube-dl
     - stomp.py
