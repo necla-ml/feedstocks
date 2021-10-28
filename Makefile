@@ -16,16 +16,13 @@ NCCL_PACKAGE=nccl
 MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
 
 # PYTHON
-# PY_VER?=3.7
 PY_VER?=3.9
 
 # PYTORCH
-# PTH_VER?=1.7.0
-# PTH_VER?=1.8.1
-# PTV_VER?=0.9.1
 PTH_VER?=1.9.0		# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
 PTV_VER?=0.10.0	
-TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5'
+TRT_VER?=8.0.1.6
+TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5;8.0;8.6'
 
 .PHONY: all
 
@@ -46,6 +43,7 @@ build-dep:
 				PY_VER=$(PY_VER) \
 				PTH_VER=$(PTH_VER) \
 				PTV_VER=$(PTV_VER) \
+				TRT_VER=$(TRT_VER) \
 				TORCH_CUDA_ARCH_LIST=$(TORCH_CUDA_ARCH_LIST) \
 				CUDA_PT_VER=$(CUDA_PT_VER) \
 				CONDA_NVCC_CONSTRAINT="    - $(CONDA_NVCC_CONSTRAINT) # [not osx]" \

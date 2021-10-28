@@ -16,8 +16,8 @@ build:
     - TORCH_CUDA_ARCH_LIST
   # FIXME: --plugins --contrib not working with v0.3.0
   # script: python setup.py install --plugins --contrib
-  script: pip install -vv --install-option="--plugins" --install-option="--contrib" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
-  script: pip install -vv --install-option="--plugins" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
+  # script: pip install -vv --install-option="--plugins" --install-option="--contrib" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
+  # script: pip install -vv --install-option="--plugins" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
 
 requirements:
@@ -27,13 +27,13 @@ requirements:
   host:
     - python={{ PY_VER }}
     - pytorch={{ PTH_VER }}
-    - tensorrt=8.0.1.6
+    - tensorrt={{ TRT_VER }}
   run:
     - numpy
     - python={{ PY_VER }}
     - pytorch={{ PTH_VER }}
     - torchvision={{ PTV_VER }}
-    - tensorrt=8.0.1.6
+    - tensorrt={{ TRT_VER }}
 test:
   imports:
     - torch2trt
