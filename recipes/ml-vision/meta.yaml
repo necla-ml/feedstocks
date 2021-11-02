@@ -4,13 +4,15 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.13.6
+  git_rev: v0.13.7
   git_url: https://github.com/necla-ml/ML-Vision.git
 
 build:
-  number: {{ GIT_DESCRIBE_NUMBER }}
+  number: 0
   {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+  script_env:
+    - TORCH_CUDA_ARCH_LIST={{ environ.get('TORCH_CUDA_ARCH_LIST', '') }}
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE', '') }}
