@@ -8,9 +8,18 @@ source:
   git_url: https://github.com/necla-ml/ML.git
 
 build:
+  # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
+  number: 0
+  script_env:
+    - PY_VER
+    - PTH_VER
+    - PTV_VER
+    - CUDA_PT_VER
+    - TORCH_CUDA_ARCH_LIST
   {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
+  string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('PKG_BUILDNUM') }}
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE', '') }}
@@ -76,7 +85,7 @@ test:
     - pytest tests -m essential
 
 about:
-  home: https://gitlab.com/necla-ml/ML
+  home: https://github.com/necla-ml/ML
   license: BSD
   license_family: BSD
   summary: NECLA Machine Learning Framework

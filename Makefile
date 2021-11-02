@@ -19,10 +19,10 @@ MAGMA_PACKAGE=magma-cuda${CUDA_PT_VER}
 PY_VER?=3.9
 
 # PYTORCH
-PTH_VER?=1.9.0		# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
-PTV_VER?=0.10.0	
+PTH_VER?=1.9		# FIXME: https://github.com/pytorch/vision/issues/4156#issuecomment-881201604
+PTV_VER?=0.10	
 TRT_VER?=8.0.1.6
-TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5;8.0;8.6'
+TORCH_CUDA_ARCH_LIST?='5.2;6.1;7.0;7.5;8.0;8.6+PTX'
 
 .PHONY: all
 
@@ -104,4 +104,4 @@ conda-setup:
 	echo export PYTHONDONTWRITEBYTECODE=1 >> $(HOME)/.bashrc
 
 conda-pkgs:
-	conda install mamba -n base -c conda-forge
+	conda install mamba -y -n base -c conda-forge
