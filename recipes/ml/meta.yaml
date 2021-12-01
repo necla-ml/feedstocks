@@ -63,7 +63,7 @@ requirements:
     - pytest-benchmark
     - python={{ PY_VER }}
     - python-daemon
-    - pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}
     - pyyaml>=5.1.2
     - requests-toolbelt         # multipart streaming over HTTP
     - setuptools>=41.2

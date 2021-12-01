@@ -39,10 +39,9 @@ requirements:
     - accimage>=0.1.1           # [not osx]
     - av>=8.0.2
     - ml>=1.4.5
-#    - opencv                   # requires `jpeg>=9d` from conda-forge
-#    - opencv-python            # FIXME: optional non-official to work around `jpeg<=9b` from torchvision
+    - opencv                   # requires `jpeg>=9d` from conda-forge
     - scikit-learn              # required by ml.plot for confusion_matrix
-    - torchvision={{ PTV_VER }} # in case of unexpected downgrade
+    - pytorch::torchvision={{ PTV_VER }} # in case of unexpected downgrade
     - pycocotools>=2.0.2
     - seaborn                   # required by yolov5-v4.0
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
