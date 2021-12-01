@@ -10,6 +10,12 @@ source:
 
 build:
   number: 0
+  script_env:
+    - PY_VER
+    - PTH_VER
+    - PTV_VER
+    - CUDA_PT_VER
+    - TORCH_CUDA_ARCH_LIST
   string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   features:
 {{ environ.get('CONDA_CPUONLY_FEATURE') }}
@@ -23,7 +29,7 @@ requirements:
     - pip
     - pytest-runner
     - python={{ PY_VER }}
-    - pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}
     
   run:
     - addict
@@ -33,12 +39,12 @@ requirements:
     - opencv-python
     - packaging
     - python={{ PY_VER }}
-    - pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}
     - pyyaml
     - regex           # [win]
     - scipy
     - tensorboard
-    - torchvision
+    - pytorch::torchvision={{ PTV_VER }}
     - yapf
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT') }}
 test:

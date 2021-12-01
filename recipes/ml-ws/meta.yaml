@@ -9,7 +9,7 @@ source:
 
 build:
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 0
+  number: 1
   script_env:
     - PY_VER
     - PTH_VER
@@ -24,14 +24,14 @@ requirements:
   host:
     - cffi
     - kvs-producer-sdk
-    - ml>=1.4.5         # ml.shutils
+    - ml>=1.4.6         # ml.shutils
     - pip
     - python={{ PY_VER }}
     - setuptools
   run:
     - cffi
     - kvs-producer-sdk
-    - ml>=1.4.5
+    - ml>=1.4.6
     - python={{ PY_VER }}
     - gstreamer>=1.18.5
     - gst-plugins-good
