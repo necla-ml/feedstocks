@@ -1,0 +1,61 @@
+{% set version = "9.1.0" %}
+
+package:
+  name: av
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/a/av/av-{{ version }}.tar.gz
+  sha256: 7ca72360253e511f0dc10c09fad223d4b791bcf512e5df88de2b5a1951ea01ad
+
+build:
+  number: 0
+  script:
+    - {{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+    # 2022/02/06: hmaarrfk
+    # Tests don't seem to be passing on azure with ppc64le
+    # NOTE: one or more encoding tests requires libx264 which may not be available
+    - python setup.py test                   # [(build_platform == target_platform) and (not ppc64le)]
+  run_exports:
+    # PyAV now claims to follow semantic versioning
+    - {{ pin_subpackage('av') }}
+
+requirements:
+  build:
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - cython                                 # [build_platform != target_platform]
+    - numpy                                  # [build_platform != target_platform]
+    - {{ compiler('c') }}
+    - pkg-config  # [not win]
+  host:
+    - python
+    - pip
+    - cython
+    - numpy
+    - necla-ml::ffmpeg
+    - pillow
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
+    - necla-ml::ffmpeg
+    - pillow
+
+test:
+  imports:
+    - av
+    - av.audio
+    - av.audio.fifo
+
+about:
+  home: https://github.com/PyAV-Org/PyAV/
+  license: BSD-3-Clause
+  license_file: LICENSE.txt
+  summary: Pythonic bindings for FFmpeg.
+
+  description: |
+    PyAV is a Pythonic binding for FFmpeg or Libav. We aim to provide all of
+    the power and control of the underlying library, but manage the gritty
+    details as much as possible.
+  doc_url: https://pyav.org/docs/develop/
+  dev_url: https://github.com/PyAV-Org/PyAV/

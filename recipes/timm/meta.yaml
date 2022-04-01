@@ -1,0 +1,45 @@
+{% set name = "timm" %}
+{% set version = "0.5.4" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 5d7b92e66a76c432009aba90d515ea7a882aae573415a7c5269e3617df901c1f
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv
+  noarch: python
+
+requirements:
+  host:
+    - pip
+    - python >=3.7
+  run:
+    - python >=3.7
+    - pytorch >=1.4
+    - torchvision
+    - typing_extensions
+    - pillow
+
+test:
+  imports:
+    - timm
+    - timm.data
+    - timm.loss
+    - timm.models
+    - timm.models.layers
+    - timm.optim
+    - timm.scheduler
+
+about:
+  home: https://github.com/rwightman/pytorch-image-models
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: (Unofficial) PyTorch Image Models
+  doc_url: https://pypi.org/project/timm/
+  dev_url: https://github.com/rwightman/pytorch-image-models

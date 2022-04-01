@@ -31,7 +31,7 @@ requirements:
   host:
     - pip
     - python={{ PY_VER }}
-    - pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}
     - setuptools
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
