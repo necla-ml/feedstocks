@@ -4,13 +4,13 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.15.1
+  git_rev: v0.15.2
   git_url: https://github.com/necla-ml/ML-Vision.git
 
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 1
+  number: 0
   script_env:
     - PY_VER
     - PTH_VER
