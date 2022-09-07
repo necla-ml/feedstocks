@@ -1,0 +1,122 @@
+diff --git a/libavcodec/packet.h b/libavcodec/packet.h
+index ca18ae631f..835979ee46 100644
+--- a/libavcodec/packet.h
++++ b/libavcodec/packet.h
+@@ -21,6 +21,7 @@
+ #ifndef AVCODEC_PACKET_H
+ #define AVCODEC_PACKET_H
+ 
++#include <stdbool.h>
+ #include <stddef.h>
+ #include <stdint.h>
+ 
+@@ -388,6 +389,16 @@ typedef struct AVPacket {
+ 
+     int64_t pos;                            ///< byte position in stream, -1 if unknown
+ 
++    uint32_t timestamp;
++
++    uint64_t last_rtcp_ntp_time;
++
++    uint32_t last_rtcp_timestamp;
++
++    uint16_t seq;
++
++    bool synced;
++
+ #if FF_API_CONVERGENCE_DURATION
+     /**
+      * @deprecated Same as the duration field, but as int64_t. This was required
+diff --git a/libavformat/rtpdec.c b/libavformat/rtpdec.c
+index fd4601e654..747e0fbb8c 100644
+--- a/libavformat/rtpdec.c
++++ b/libavformat/rtpdec.c
+@@ -19,6 +19,7 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
++#include <stdbool.h>
+ #include "libavutil/mathematics.h"
+ #include "libavutil/avstring.h"
+ #include "libavutil/intreadwrite.h"
+@@ -628,6 +629,7 @@ void ff_rtp_parse_set_crypto(RTPDemuxContext *s, const char *suite,
+  */
+ static void finalize_packet(RTPDemuxContext *s, AVPacket *pkt, uint32_t timestamp)
+ {
++    bool synced = false;
+     if (pkt->pts != AV_NOPTS_VALUE || pkt->dts != AV_NOPTS_VALUE)
+         return; /* Timestamp already set by depacketizer */
+     if (timestamp == RTP_NOTS_VALUE)
+@@ -659,6 +661,22 @@ static void finalize_packet(RTPDemuxContext *s, AVPacket *pkt, uint32_t timestam
+     s->timestamp = timestamp;
+     pkt->pts     = s->unwrapped_timestamp + s->range_start_offset -
+                    s->base_timestamp;
++
++    /* export private data (timestamps) into AVPacket */
++    if (s->last_rtcp_ntp_time != AV_NOPTS_VALUE && s->last_rtcp_timestamp) {
++        synced = true;
++        pkt->last_rtcp_ntp_time = s->last_rtcp_ntp_time;
++        pkt->last_rtcp_timestamp = s->last_rtcp_timestamp;
++    }
++    else {
++        pkt->last_rtcp_ntp_time = 0;
++        pkt->last_rtcp_timestamp = 0;
++    }
++
++    pkt->seq = s->seq;
++    pkt->timestamp = s->timestamp;
++    pkt->synced = synced;
++
+ }
+ 
+ static int rtp_parse_packet_internal(RTPDemuxContext *s, AVPacket *pkt,
+diff --git a/libavformat/utils.c b/libavformat/utils.c
+index 75e5350a27..9d973de2b8 100644
+--- a/libavformat/utils.c
++++ b/libavformat/utils.c
+@@ -19,6 +19,7 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
++#include <stdbool.h>
+ #include <stdint.h>
+ 
+ #include "config.h"
+@@ -1541,9 +1542,24 @@ static int read_frame_internal(AVFormatContext *s, AVPacket *pkt)
+     int ret, i, got_packet = 0;
+     AVDictionary *metadata = NULL;
+ 
++    uint32_t timestamp;
++    uint64_t last_rtcp_ntp_time;
++    uint32_t last_rtcp_timestamp;
++    uint16_t seq;
++    bool synced;
++
+     while (!got_packet && !s->internal->parse_queue) {
+         AVStream *st;
+ 
++        /* copy over the RTP time stamp */
++        timestamp = pkt->timestamp;
++        last_rtcp_ntp_time = pkt->last_rtcp_ntp_time;
++        last_rtcp_timestamp = pkt->last_rtcp_timestamp;
++        seq = pkt->seq;
++        synced = pkt->synced;
++
++        av_log(NULL, AV_LOG_ERROR, "SYNCED=%d\n", pkt->synced);
++
+         /* read next packet */
+         ret = ff_read_packet(s, pkt);
+         if (ret < 0) {
+@@ -1735,6 +1751,12 @@ FF_ENABLE_DEPRECATION_WARNINGS
+     if (ret == AVERROR_EOF && s->pb && s->pb->error < 0 && s->pb->error != AVERROR(EAGAIN))
+         ret = s->pb->error;
+ 
++    pkt->timestamp = timestamp;
++    pkt->last_rtcp_ntp_time = last_rtcp_ntp_time;
++    pkt->last_rtcp_timestamp = last_rtcp_timestamp;
++    pkt->seq = seq;
++    pkt->synced = synced;
++
+     return ret;
+ }
+ 
