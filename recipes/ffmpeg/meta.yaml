@@ -10,18 +10,18 @@ source:
   url: https://ffmpeg.org/releases/ffmpeg-{{ version_ffmpeg_style }}.tar.gz
   # sha256: 2f5b24f30e41963ce80f0ab7c78a1b91e86fb3fbb4a7661147c572c587177eee
   patches:
-  {% if license_family == 'ntp_rtp_patch' %}
+  {% if extension == 'ntp_rtp_patch' %}
     - patches/add_rtp_ntp_timestamp_4.4.1.patch
   {% endif %}
 
 {% set number = 0 %}
-{% if license_family == 'gpl' %}
+{% if extension == 'gpl' %}
     {% set number = number + 100 %}
 {% endif %}
 
 build:
   number: {{ number }}
-  string: {{ license_family }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
+  string: {{ extension }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
   run_exports:
   # seems to be major version compatibility
   # https://abi-laboratory.pro/tracker/timeline/ffmpeg/
@@ -43,7 +43,7 @@ requirements:
     - gnutls  # [not win]
     - libiconv=1.16
     - zlib
-    {% if license_family == 'gpl' %}
+    {% if extension == 'gpl' %}
     - x265
     - x264
     {% endif %}
@@ -58,7 +58,7 @@ requirements:
     - gnutls  # [not win]
     - libiconv=1.16
     - zlib
-    {% if license_family == 'gpl' %}
+    {% if extension == 'gpl' %}
     - x265
     - x264
     {% endif %}
@@ -96,15 +96,15 @@ test:
 
 about:
   home: https://www.ffmpeg.org/
-  license: GPL-2.0-or-later  # [license_family=='gpl']
-  license: LGPL-2.1-or-later  # [license_family=='lgpl']
+  license: GPL-2.0-or-later  # [extension=='gpl']
+  license: LGPL-2.1-or-later  # [extension=='lgpl']
   license_file:
-    - COPYING.GPLv2            # [license_family=='gpl']
-    - COPYING.GPLv3            # [license_family=='gpl']
-    - COPYING.LGPLv2.1         # [license_family=='lgpl']
-    - COPYING.LGPLv3           # [license_family=='lgpl']
-  license_family: GPL  # [license_family=='gpl']
-  license_family: LGPL  # [license_family=='lgpl']
+    - COPYING.GPLv2            # [extension=='gpl']
+    - COPYING.GPLv3            # [extension=='gpl']
+    - COPYING.LGPLv2.1         # [extension=='lgpl']
+    - COPYING.LGPLv3           # [extension=='lgpl']
+  extension: GPL  # [extension=='gpl']
+  extension: LGPL  # [extension=='lgpl']
   summary: Cross-platform solution to record, convert and stream audio and video.
   dev_url: https://git.ffmpeg.org/ffmpeg.git
   doc_url: https://ffmpeg.org/documentation.html

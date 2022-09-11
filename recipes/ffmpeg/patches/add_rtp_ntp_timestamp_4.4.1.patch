@@ -1,5 +1,5 @@
 diff --git a/libavcodec/packet.h b/libavcodec/packet.h
-index ca18ae631f..835979ee46 100644
+index ca18ae6..835979e 100644
 --- a/libavcodec/packet.h
 +++ b/libavcodec/packet.h
 @@ -21,6 +21,7 @@
@@ -28,7 +28,7 @@ index ca18ae631f..835979ee46 100644
      /**
       * @deprecated Same as the duration field, but as int64_t. This was required
 diff --git a/libavformat/rtpdec.c b/libavformat/rtpdec.c
-index fd4601e654..747e0fbb8c 100644
+index fd4601e..747e0fb 100644
 --- a/libavformat/rtpdec.c
 +++ b/libavformat/rtpdec.c
 @@ -19,6 +19,7 @@
@@ -71,52 +71,22 @@ index fd4601e654..747e0fbb8c 100644
  
  static int rtp_parse_packet_internal(RTPDemuxContext *s, AVPacket *pkt,
 diff --git a/libavformat/utils.c b/libavformat/utils.c
-index 75e5350a27..9d973de2b8 100644
+index 75e5350..345c1ca 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -19,6 +19,7 @@
-  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-  */
+@@ -1498,6 +1498,15 @@ static int parse_packet(AVFormatContext *s, AVPacket *pkt,
+         out_pkt->pos          = st->parser->pos;
+         out_pkt->flags       |= pkt->flags & AV_PKT_FLAG_DISCARD;
  
-+#include <stdbool.h>
- #include <stdint.h>
- 
- #include "config.h"
-@@ -1541,9 +1542,24 @@ static int read_frame_internal(AVFormatContext *s, AVPacket *pkt)
-     int ret, i, got_packet = 0;
-     AVDictionary *metadata = NULL;
- 
-+    uint32_t timestamp;
-+    uint64_t last_rtcp_ntp_time;
-+    uint32_t last_rtcp_timestamp;
-+    uint16_t seq;
-+    bool synced;
++        // copy over needed stuff to out_pkt
++        // which will be appended to a pkt_list and out_pkt will be
++        // reverted to default values
++        out_pkt->synced = pkt->synced;
++        out_pkt->last_rtcp_ntp_time = pkt->last_rtcp_ntp_time;
++        out_pkt->last_rtcp_timestamp = pkt->last_rtcp_timestamp;
++        out_pkt->seq = pkt->seq;
++        out_pkt->timestamp = pkt->timestamp;
 +
-     while (!got_packet && !s->internal->parse_queue) {
-         AVStream *st;
- 
-+        /* copy over the RTP time stamp */
-+        timestamp = pkt->timestamp;
-+        last_rtcp_ntp_time = pkt->last_rtcp_ntp_time;
-+        last_rtcp_timestamp = pkt->last_rtcp_timestamp;
-+        seq = pkt->seq;
-+        synced = pkt->synced;
-+
-+        av_log(NULL, AV_LOG_ERROR, "SYNCED=%d\n", pkt->synced);
-+
-         /* read next packet */
-         ret = ff_read_packet(s, pkt);
-         if (ret < 0) {
-@@ -1735,6 +1751,12 @@ FF_ENABLE_DEPRECATION_WARNINGS
-     if (ret == AVERROR_EOF && s->pb && s->pb->error < 0 && s->pb->error != AVERROR(EAGAIN))
-         ret = s->pb->error;
- 
-+    pkt->timestamp = timestamp;
-+    pkt->last_rtcp_ntp_time = last_rtcp_ntp_time;
-+    pkt->last_rtcp_timestamp = last_rtcp_timestamp;
-+    pkt->seq = seq;
-+    pkt->synced = synced;
-+
-     return ret;
- }
+         if (st->need_parsing == AVSTREAM_PARSE_FULL_RAW)
+             out_pkt->pos = st->parser->frame_offset;
  

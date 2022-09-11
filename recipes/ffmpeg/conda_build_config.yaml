@@ -1,4 +1,4 @@
-license_family:
-  - lgpl
-  # - ntp_rtp_patch
+extension:
+  # - lgpl
+  - ntp_rtp_patch
   # - gpl
