@@ -1,0 +1,32 @@
+package:
+  name: mv-extractor
+  version: 1.0.6
+
+source:
+  git_rev: master
+  git_url: https://github.com/LukasBommes/mv-extractor.git
+
+build:
+  number: 0
+  script: {{ PYTHON }} setup.py install
+
+requirements:
+  host:
+    - pkgconfig
+    - numpy>=1.20
+    - python=3.9
+    - opencv
+    - necla-ml::ffmpeg>=4.4.1=*ntp*
+  run:
+    - python=3.9
+    - opencv
+    - necla-ml::ffmpeg>=4.4.1=*ntp*
+
+test:
+  imports:
+    - mvextractor
+
+about:
+  home: https://github.com/LukasBommes/mv-extractor.git
+  license: MIT
+  summary: "This tool extracts frames, motion vectors, frame types and timestamps from H.264 and MPEG-4 Part 2 encoded videos."
