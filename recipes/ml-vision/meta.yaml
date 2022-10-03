@@ -4,13 +4,13 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.15.3
+  git_rev: v0.16.0
   git_url: https://github.com/necla-ml/ML-Vision.git
 
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 0
+  number: 1
   script_env:
     - PY_VER
     - PTH_VER
@@ -33,13 +33,13 @@ requirements:
 #    - cxx-compiler
 # {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml>=1.4.7
+    - ml>=1.4.8
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - accimage>=0.1.1           # [not osx]
     - necla-ml::av>=9.1.0
     - necla-ml::timm>=0.6.7  
-    - ml>=1.4.7
+    - ml>=1.4.8
     - opencv                    # requires `jpeg>=9d` from conda-forge
     - scikit-learn              # required by ml.plot for confusion_matrix
     - pytorch::torchvision={{ PTV_VER }} # in case of unexpected downgrade

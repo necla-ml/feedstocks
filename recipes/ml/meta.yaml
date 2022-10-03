@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v1.4.7
+  git_rev: v1.4.8
   git_url: https://github.com/necla-ml/ML.git
 
 build:
@@ -57,6 +57,8 @@ requirements:
     - pigz
     - pip
     - psutil                    # number of physical cores
+    - pydantic>=1.9.1
+    - pydot>=1.4.2
     - pygments>=2.4.2
     - pytables>=3.5.2
     - pytest>=5.2.0

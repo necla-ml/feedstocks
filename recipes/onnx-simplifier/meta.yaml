@@ -1,0 +1,34 @@
+{% set name = "onnx-simplifier" %}
+{% set version = "0.4.8" %}
+{% set cp = "-cp" + PY_VER | replace(".", "") %}
+{% set whl = "https://files.pythonhosted.org/packages/b6/17/d4a626d48e40f440c9159373f29b99e82e3f4fc38239e475e122f67582da/onnx_simplifier-" + version + cp + cp + "-manylinux_2_17_x86_64.manylinux2014_x86_64.whl" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+build:
+  number: 0
+  script:
+    - pip install {{ whl }} -vvv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:'
+
+requirements:
+  host:
+    - python={{ PY_VER }}
+    - pip
+  run:
+    - python={{ PY_VER }}
+    - onnx
+    - onnxruntime
+    - protobuf>=3.7.0
+    - rich
+
+test:
+  imports:
+    - onnxsim
+
+about:
+  home: https://github.com/daquexian/onnx-simplifier
+  license: Apache-2.0
+  license_family: APACHE
+  summary: ONNX Simplifier is presented to simplify the ONNX model. It infers the whole computation graph and then replaces the redundant operators with their constant outputs.

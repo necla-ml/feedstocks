@@ -7,17 +7,18 @@ source:
   git_url: https://github.com/LukasBommes/mv-extractor.git
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} setup.py install
 
 requirements:
   host:
     - pkgconfig
-    - numpy>=1.20
+    - numpy>=1.23
     - python=3.9
     - opencv
     - necla-ml::ffmpeg>=4.4.1=*ntp*
   run:
+    - numpy>=1.23
     - python=3.9
     - opencv
     - necla-ml::ffmpeg>=4.4.1=*ntp*
