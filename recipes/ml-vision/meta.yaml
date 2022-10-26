@@ -10,7 +10,7 @@ source:
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 1
+  number: 4
   script_env:
     - PY_VER
     - PTH_VER
