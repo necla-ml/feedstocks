@@ -10,7 +10,7 @@ source:
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 0
+  number: 1
   script_env:
     - PY_VER
     - PTH_VER
@@ -68,6 +68,7 @@ requirements:
     - pytorch::pytorch={{ PTH_VER }}
     - pyyaml>=5.1.2
     - requests-toolbelt         # multipart streaming over HTTP
+    - ruamel_yaml
     - setuptools>=41.2
     - six>=1.12
     - scikit-learn>=0.21.3      # required by BERT

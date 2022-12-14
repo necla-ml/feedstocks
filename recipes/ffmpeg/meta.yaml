@@ -1,4 +1,4 @@
-{% set version = "4.4.1" %} # semver: (x.y.z)
+{% set version = "4.4.2" %} # semver: (x.y.z)
 {% set x,y,z = version.split('.') %}
 {% set version_ffmpeg_style = x ~ '.' ~ y if z == "0" else version %}
 
@@ -8,20 +8,22 @@ package:
 
 source:
   url: https://ffmpeg.org/releases/ffmpeg-{{ version_ffmpeg_style }}.tar.gz
-  # sha256: 2f5b24f30e41963ce80f0ab7c78a1b91e86fb3fbb4a7661147c572c587177eee
+  sha256: 058efd4b6459bc9df54186f17a989d0af619a793aa62f07e96b88632706d6a17
   patches:
-  {% if extension == 'ntp_rtp_patch' %}
-    - patches/add_rtp_ntp_timestamp_4.4.1.patch
+    - patches/TARGET_OS_OSX.patch     # [osx]
+    - patches/pkgconfig_generate_windows_llvm.patch  # [win]
+  {% if patch_type == 'ntp_rtp_patch' %}
+    - patches/rtp_ntp_timestamp_{{ version }}.patch
   {% endif %}
 
-{% set number = 0 %}
-{% if extension == 'gpl' %}
-    {% set number = number + 100 %}
+{% set build = 0 %}
+{% if license_family == 'gpl' %}
+    {% set build = build + 100 %}
 {% endif %}
 
 build:
-  number: {{ number }}
-  string: {{ extension }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
+  number: {{ build }}
+  string: {{ patch_type }}{{ license_family }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
   run_exports:
   # seems to be major version compatibility
   # https://abi-laboratory.pro/tracker/timeline/ffmpeg/
@@ -31,53 +33,49 @@ requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - pkg-config  # [not win]
+    # clangxx is required for support of the nvidia encoders and decoders
+    - clangxx  # [linux64]
+    - autotools_clang_conda  # [win]
+    - pkg-config
     - libtool  # [not win]
-    - nasm  # [not win]
+    - nasm  # [not (osx and x86_64)]
+    # osx_64 needs yasm due to https://stackoverflow.com/questions/58796267/building-for-macos-but-linking-in-object-file-built-for-free-standing
+    - yasm  # [osx and x86_64]
     - lame  # [not win]
     - make  # [not win]
+    - m2-sed  # [win]
   host:
     - bzip2
-    - libpng
     - freetype
+    - fontconfig
     - gnutls  # [not win]
-    - libiconv=1.16
-    - zlib
-    {% if extension == 'gpl' %}
+    - libiconv  # [osx]
+    {% if license_family == 'gpl' %}
+    - x264 # only works with `conda mamabuild -c conda-forge`
     - x265
-    - x264
     {% endif %}
-    - openh264  # [not win]
+    - libvpx  # [not win]
+    - zlib
+    - openh264
     - lame  # [not win]
     - gmp  # [unix]
-    - nettle # [not win]
-  run:
-    - bzip2
-    - libpng
-    - freetype
-    - gnutls  # [not win]
-    - libiconv=1.16
-    - zlib
-    {% if extension == 'gpl' %}
-    - x265
-    - x264
-    {% endif %}
-    - openh264  # [not win]
-    - lame  # [not win]
-    - gmp  # [unix]
-    - nettle  # [not win]
+    - libva  # [linux64]
+    - ffnvcodec-headers  # [linux64 or win]
 
-{% set grep = "grep" %}  # [unix]
+{% set grep = "grep" %}     # [unix]
 {% set grep = "findstr" %}  # [win]
 
 test:
   commands:
     - ffmpeg --help
-    - ffmpeg -loglevel panic -protocols | grep "https"  # [not win]
-    - ffmpeg -loglevel panic -codecs | grep "libmp3lame"  # [not win]
-    - ffmpeg -loglevel panic -codecs | grep "DEVI.S zlib"  # [unix]
-    - ffmpeg -loglevel panic -codecs | grep "DEV.LS h264"  # [unix]
-    - ffmpeg -loglevel panic -codecs | grep "libopenh264"  # [unix]
+    - ffmpeg -hide_banner -codecs
+    - ffmpeg -hide_banner -protocols
+    - ffmpeg -hide_banner -protocols | {{ grep }} "https"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "libmp3lame"       # [unix]
+    - ffmpeg -hide_banner -codecs | {{ grep }} "DEVI.S\ zlib"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "DEV.LS h264"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "libopenh264"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "vaapi"            # [linux64]
     # Verify dynamic libraries on all systems
     {% set ffmpeg_libs = [
         "avdevice",
@@ -86,29 +84,77 @@ test:
         "avcodec",
         "avformat",
         "swscale",
+        "avresample",
         "avutil",
     ] %}
     {% for each_ffmpeg_lib in ffmpeg_libs %}
     - test -f $PREFIX/lib/lib{{ each_ffmpeg_lib }}${SHLIB_EXT}  # [unix]
     - if not exist %PREFIX%\\Library\\lib\\{{ each_ffmpeg_lib }}.lib exit 1  # [win]
     {% endfor %}
-
+    # Windows dynamic libraries have a suffix
+    {% set ffmpeg_libs = [
+        "avdevice-58",
+        "swresample-3",
+        "avfilter-7",
+        "avcodec-58",
+        "avformat-58",
+        "swscale-5",
+        "avresample-4",
+        "avutil-56",
+    ] %}
+    {% for each_ffmpeg_lib in ffmpeg_libs %}
+    - if not exist %PREFIX%\\Library\\bin\\{{ each_ffmpeg_lib }}.dll exit 1  # [win]
+    {% endfor %}
+    {%- if license_family == 'gpl' %}
+    - ffmpeg -hide_banner -buildconf | {{ grep }} "enable-gpl"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "libx264"
+    - ffmpeg -hide_banner -codecs | {{ grep }} "libx265"
+    - test -f $PREFIX/lib/libpostproc${SHLIB_EXT}         # [unix]
+    - if not exist %PREFIX%\\Library\\bin\\postproc-55.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\postproc.lib exit 1  # [win]
+    # https://trac.ffmpeg.org/wiki/Null
+    - ffmpeg -hide_banner -f lavfi -i nullsrc=s=256x256:d=8 -vcodec libx264 -f null -
+    - ffmpeg -hide_banner -f lavfi -i nullsrc=s=256x256:d=8 -vcodec libx265 -f null -
+    {%- endif %}
+    {%- if license_family == 'lgpl' %}
+    - ffmpeg -hide_banner -buildconf | {{ grep }} "disable-gpl"
+    - test ! $(ffmpeg -hide_banner -codecs | grep "libx264")     # [unix]
+    - test ! $(ffmpeg -hide_banner -codecs | grep "libx265")     # [unix]
+    - test ! -f $PREFIX/lib/libpostproc${SHLIB_EXT}              # [unix]
+    - if exist %PREFIX%\\Library\\bin\\postproc-55.dll exit 1    # [win]
+    - if exist %PREFIX%\\Library\\lib\\postproc.lib exit 1       # [win]
+    {%- endif %}
+    # Verify nvidia codecs on linux
+    {% set nvcodecs = [
+        "nvenc",
+        "h264_nvenc",
+        "hevc_nvenc",
+        "mjpeg_cuvid",
+        "mpeg1_cuvid",
+        "mpeg2_cuvid",
+        "mpeg4_cuvid",
+        "vc1_cuvid",
+        "vp8_cuvid",
+        "vp9_cuvid"
+    ] %}
+    {% for nvcodec in nvcodecs %}
+    # Make sure to include a space in there to ensure we get an exact match
+    - ffmpeg -hide_banner -codecs | {{ grep }} " {{ nvcodec }} "  # [linux64 or win]
+    {% endfor %}
+    # https://trac.ffmpeg.org/wiki/Null
+    - ffmpeg -hide_banner -f lavfi -i nullsrc=s=256x256:d=8 -vcodec libopenh264 -f null -
 
 about:
-  home: https://www.ffmpeg.org/
-  license: GPL-2.0-or-later  # [extension=='gpl']
-  license: LGPL-2.1-or-later  # [extension=='lgpl']
+  home: http://www.ffmpeg.org/
+  license: GPL-2.0-or-later     # [license_family=='gpl']
+  license: LGPL-2.1-or-later    # [license_family=='lgpl']
   license_file:
-    - COPYING.GPLv2            # [extension=='gpl']
-    - COPYING.GPLv3            # [extension=='gpl']
-    - COPYING.LGPLv2.1         # [extension=='lgpl']
-    - COPYING.LGPLv3           # [extension=='lgpl']
-  extension: GPL  # [extension=='gpl']
-  extension: LGPL  # [extension=='lgpl']
+    - COPYING.GPLv2            # [license_family=='gpl']
+    - COPYING.GPLv3            # [license_family=='gpl']
+    - COPYING.LGPLv2.1         # [license_family=='lgpl']
+    - COPYING.LGPLv3           # [license_family=='lgpl']
+  license_family: GPL          # [license_family=='gpl']
+  license_family: LGPL         # [license_family=='lgpl']
   summary: Cross-platform solution to record, convert and stream audio and video.
   dev_url: https://git.ffmpeg.org/ffmpeg.git
   doc_url: https://ffmpeg.org/documentation.html
-
-extra:
-  recipe-maintainers:
-    - deepsworld
