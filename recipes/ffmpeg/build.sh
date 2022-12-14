@@ -79,11 +79,11 @@ elif [[ "${target_platform}" == linux-* ]]; then
   PKG_CONFIG="${BUILD_PREFIX}/bin/pkg-config"
   extra_args="${extra_args} --enable-gnutls"
   extra_args="${extra_args} --enable-libmp3lame"
-  # extra_args="${extra_args} --enable-libvpx"
+  extra_args="${extra_args} --enable-libvpx"
   extra_args="${extra_args} --enable-pthreads"
-  # if [[ "${target_platform}" == "linux-64" ]]; then
-  #   extra_args="${extra_args} --enable-vaapi"
-  # fi
+  if [[ "${target_platform}" == "linux-64" ]]; then
+    extra_args="${extra_args} --enable-vaapi"
+  fi
 elif [[ "${target_platform}" == osx-* ]]; then
   if [[ "${target_platform}" == osx-arm64 ]]; then
     extra_args="${extra_args} --enable-neon"
@@ -127,9 +127,11 @@ fi
         --ar=${AR} \
         --disable-doc \
         --disable-openssl \
+        --enable-avresample \
         --enable-demuxer=dash \
         --enable-hardcoded-tables \
         --enable-libfreetype \
+        --enable-libfontconfig \
         --enable-libopenh264 \
         ${extra_args} \
         --enable-pic \
@@ -157,7 +159,7 @@ fi
 if [[ ${CI} != "" ]]; then cat ffbuild/config.mak; fi
 
 make -j${CPU_COUNT}
-make install -j${CPU_COUNT}
+make install
 
 if [[ "${target_platform}" == win-* ]]; then
   if [[ "${UNISTD_CREATED}" == "1" ]]; then
