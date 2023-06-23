@@ -1,4 +1,4 @@
-{% set version = "9.1.0" %}
+{% set version = "9.2.0" %}
 
 package:
   name: av
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/a/av/av-{{ version }}.tar.gz
-  sha256: 7ca72360253e511f0dc10c09fad223d4b791bcf512e5df88de2b5a1951ea01ad
+  sha256: f2a7c226724d7f7745b376b459c500d9d17bd8d0473b7ea6bf8ddb4f7957c69d # 7ca72360253e511f0dc10c09fad223d4b791bcf512e5df88de2b5a1951ea01ad
 
 build:
   number: 0
@@ -33,13 +33,14 @@ requirements:
     - pip
     - cython
     - numpy
-    - necla-ml::ffmpeg
+    - ffmpeg>=4.4.2=*lgpl*
     - pillow
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - necla-ml::ffmpeg
+    - ffmpeg>=4.4.2=*lgpl*
     - pillow
+    - sdl2
 
 test:
   imports:
