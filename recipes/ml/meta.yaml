@@ -4,19 +4,18 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v1.4.8
+  git_rev: v1.4.9
   git_url: https://github.com/necla-ml/ML.git
 
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 1
+  number: 3
   script_env:
     - PY_VER
     - PTH_VER
     - PTV_VER
     - CUDA_PT_VER
-    - TORCH_CUDA_ARCH_LIST
   {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
   string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('PKG_BUILDNUM') }}
@@ -31,9 +30,9 @@ requirements:
   host:
     - pip
     - python={{ PY_VER }}
-    - pytorch::pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}=*{{ PTH_BUILD }}*
     - setuptools
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
+{{ environ.get('PTH_CUDA', '') }}
   run:
     - anaconda-client
     - blosc-hdf5-plugin
@@ -53,11 +52,12 @@ requirements:
     - mamba                     # drop-in conda replacement in C/C++
     - numba>=0.52               # optional: experimental speedup with JIT
     - numexpr
+    - onnx
     - pandas>=0.25.1
     - pigz
     - pip
     - psutil                    # number of physical cores
-    - pydantic>=1.9.1
+    - pydantic=1.9.1
     - pydot>=1.4.2
     - pygments>=2.4.2
     - pytables>=3.5.2
@@ -65,7 +65,7 @@ requirements:
     - pytest-benchmark
     - python={{ PY_VER }}
     - python-daemon
-    - pytorch::pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}=*{{ PTH_BUILD }}*
     - pyyaml>=5.1.2
     - requests-toolbelt         # multipart streaming over HTTP
     - ruamel_yaml
@@ -74,8 +74,8 @@ requirements:
     - scikit-learn>=0.21.3      # required by BERT
     - tensorboard>=2.1
     - transformers>=2.1.1
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
-{{ environ.get('MAGMA_PACKAGE', '') }}
+    - typing_extensions=4.3.0 # pydantic=1.9.1 dependency
+{{ environ.get('PTH_CUDA', '') }}
 test:
   requires:
     - pytest

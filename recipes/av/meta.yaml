@@ -33,12 +33,12 @@ requirements:
     - pip
     - cython
     - numpy
-    - ffmpeg>=4.4.2=*lgpl*
+    - ffmpeg=4.4.2=*lgpl*
     - pillow
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - ffmpeg>=4.4.2=*lgpl*
+    - ffmpeg=4.4.2=*lgpl*
     - pillow
     - sdl2
 
