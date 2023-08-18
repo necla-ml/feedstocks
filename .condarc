@@ -1,6 +1,6 @@
 channels:
-  - NECLA-ML  # ML, ML-WS, ML-Vision, DCN-RFCN
-  - pytorch-lts
+  - NECLA-ML  # ML, ML-WS, ML-Vision
+  - pytorch
   - nvidia
   - conda-forge
   - defaults

@@ -28,14 +28,11 @@ requirements:
   host:
     - libcurl
     - openssl
-#    - python=3.7d
   run:
     - libcurl
     - openssl
-#    - python=3.7
+
 test:
-#  requires:
-#    - pytest
   imports:
 
 about:

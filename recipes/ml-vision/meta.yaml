@@ -3,14 +3,13 @@ package:
   version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
 
 source:
-  git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.16.0
+  git_rev: v0.20.0
   git_url: https://github.com/necla-ml/ML-Vision.git
 
 build:
   # GIT_BUILD_STR={GIT_DESCRIBE_NUMBER}_{GIT_DESCRIBE_HASH}
   number: {{ GIT_DESCRIBE_NUMBER }}
-  number: 5
+  number: 0
   script_env:
     - PY_VER
     - PTH_VER
@@ -19,7 +18,6 @@ build:
     - TORCH_CUDA_ARCH_LIST
   {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
   {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
-  string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_DESCRIBE_NUMBER', '0') }}
   string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('PKG_BUILDNUM') }}
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   features:
@@ -27,32 +25,25 @@ build:
 
 requirements:
   build:
-#    - gcc_linux-64  # [linux]
-#    - gxx_linux-64  # [linux]
-#    - compilers  # [linux]
-#    - cxx-compiler
-# {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml>=1.4.8
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
+    - ml>=1.4.9
   run:
-    - accimage>=0.1.1           # [not osx]
+    - accimage>=0.1.1                     # [not osx]
     - conda-forge::av=9.2.0
-    - timm>=0.9.2  
-    - ml>=1.4.8
-    - opencv                    # requires `jpeg>=9d` from conda-forge
-    - scikit-learn              # required by ml.plot for confusion_matrix
-    - pytorch::torchvision={{ PTV_VER }} # in case of unexpected downgrade
-    - conda-forge::ffmpeg=4.4.2=*lgpl*   # force LGPL-ED ffmpeg
+    - necla-ml::ml>=1.4.9
+    # - conda-forge::opencv=4.5             # requires `jpeg>=9d` from conda-forge
+    - necla-ml::opencv-python
+    - scikit-learn                        # required by ml.plot for confusion_matrix
+    - pytorch::torchvision={{ PTV_VER }}  # in case of unexpected downgrade
+    - conda-forge::ffmpeg>=4.4.2=*lgpl*    # force LGPL-ED ffmpeg
     - pycocotools>=2.0.2
-    - seaborn                   # required by yolov5-v4.0
     - conda-forge::sdl2
-{{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
-{{ environ.get('MAGMA_PACKAGE', '') }}
+    - conda-forge::loguru
+    - conda-forge::tabulate
+    - conda-forge::timm
 test:
   requires:
     - pytest
-  #  - opencv-python             # required by YOLOv5
   imports:
     - ml.av
   source_files:
@@ -60,7 +51,6 @@ test:
     - tests
     - assets
   commands:
-    - $PYTHON -c 'import torch; import ml._C'
     - pytest -m essential
 
 about:

@@ -3,22 +3,12 @@ package:
   version: {{ environ.get('GIT_DESCRIBE_TAG', '').replace('v', '') }}
 
 source:
-  git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: 81024cc
-  git_rev: v0.3.0
+  git_rev: v0.4.0
   git_url: https://github.com/NVIDIA-AI-IOT/torch2trt
 
 build:
   number: 0
-  #   {{ GIT_DESCRIBE_NUMBER }}
-  # {% if environ.get('GIT_DESCRIBE_NUMBER', '0') == '0' %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_0
-  # {% else %}string: py{{ environ.get('PY_VER').replace('.', '') }}{{ environ.get('BLD_STR_SUFFIX') }}_{{ environ.get('GIT_BUILD_STR', 'GIT_STUB') }}{% endif %}
   script_env:
-    - TORCH_CUDA_ARCH_LIST
-  # FIXME: --plugins --contrib not working with v0.3.0
-  # script: python setup.py install --plugins --contrib
-  # script: pip install -vv --install-option="--plugins" --install-option="--contrib" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
-  # script: pip install -vv --install-option="--plugins" --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
   script: pip install -vv --no-deps --ignore-installed --no-build-isolation --no-binary ':all:' .
 
 requirements:
@@ -27,12 +17,13 @@ requirements:
     #- nvcc_linux-64 # [linux]
   host:
     - python={{ PY_VER }}
-    - pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}=*{{ PTH_BUILD }}*
     - tensorrt={{ TRT_VER }}
+    - packaging
   run:
     - numpy
     - python={{ PY_VER }}
-    - pytorch::pytorch={{ PTH_VER }}
+    - pytorch::pytorch={{ PTH_VER }}=*{{ PTH_BUILD }}*
     - pytorch::torchvision={{ PTV_VER }}
     - tensorrt={{ TRT_VER }}
 test:
