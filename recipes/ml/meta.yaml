@@ -40,12 +40,14 @@ requirements:
     - boto3
     - conda-build
     - cython
+    - necla-ml::cython-bbox
     - einops
     - flake8
     - git
     - git-lfs
     - h5py>=2.10
     - ignite
+    - lap
     - line_profiler>=2.1.2
     - lbzip2
     - matplotlib>=3.3.1         # figure close leak in 3.3.0
