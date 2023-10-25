@@ -41,7 +41,7 @@ requirements:
     - libpng
     - freetype
     - gnutls  # [not win]
-    - libiconv=1.16
+    - libiconv
     - zlib
     {% if license_family == 'gpl' %}
     - x265
@@ -56,7 +56,7 @@ requirements:
     - libpng
     - freetype
     - gnutls  # [not win]
-    - libiconv=1.16
+    - libiconv
     - zlib
     {% if license_family == 'gpl' %}
     - x265

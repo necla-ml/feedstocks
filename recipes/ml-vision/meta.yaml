@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: {{ GIT_DESCRIBE_TAG }}
-  git_rev: v0.15.2
+  git_rev: v0.15.1
   git_url: https://github.com/necla-ml/ML-Vision.git
 
 build:
@@ -33,19 +33,20 @@ requirements:
 #    - cxx-compiler
 # {{ environ.get('CONDA_NVCC_CONSTRAINT', '') }}
   host:
-    - ml>=1.4.7
+    - ml=1.4.8
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
   run:
     - accimage>=0.1.1           # [not osx]
-    - necla-ml::av>=9.1.0
+    - conda-forge::av=9.2.0
     - necla-ml::timm>=0.5.4  
-    - ml>=1.4.7
-    - opencv                    # requires `jpeg>=9d` from conda-forge
+    - ml=1.4.8
+    - necla-ml::opencv-python                    # requires `jpeg>=9d` from conda-forge
     - scikit-learn              # required by ml.plot for confusion_matrix
     - pytorch::torchvision={{ PTV_VER }} # in case of unexpected downgrade
-    - necla-ml::ffmpeg>=4.4.1   # force LGPL-ED ffmpeg from NECLA-ML channel
+    - necla-ml::ffmpeg=4.4.2=*lgpl*   # force LGPL-ED ffmpeg from NECLA-ML channel
     - pycocotools>=2.0.2
     - seaborn                   # required by yolov5-v4.0
+    - numexpr>=2.8.0             # pandas require newer version 
 {{ environ.get('CONDA_CUDATOOLKIT_CONSTRAINT', '') }}
 {{ environ.get('MAGMA_PACKAGE', '') }}
 test:

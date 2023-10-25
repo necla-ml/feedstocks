@@ -33,12 +33,12 @@ requirements:
     - pip
     - cython
     - numpy
-    - necla-ml::ffmpeg
+    - necla-ml::ffmpeg=4.4.2=*lgpl*
     - pillow
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - necla-ml::ffmpeg
+    - necla-ml::ffmpeg=4.4.2=*lgpl*
     - pillow
 
 test:
